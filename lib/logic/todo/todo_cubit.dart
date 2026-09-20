@@ -35,8 +35,28 @@ class TodoCubit extends Cubit<TodoState> {
       await Future.delayed(Duration(seconds: 2));
       state.todos.add(model);
       emit(AddTodo(todos: state.todos));
+      emit(TodoState(todos: state.todos));
     } catch (e) {
       emit(TodoError(todos: state.todos, message: "Nimadir xato ketdi: $e"));
     }
+  }
+
+  void editTodo(TodoModel todo) async {
+    try {
+      emit(TodoLoading(todos: state.todos));
+      int index = state.todos.indexWhere((element) => element.id==todo.id,);
+      state.todos[index] = todo;
+      await Future.delayed(Duration(seconds: 1));
+      emit(TodoEdited(todos: state.todos));
+      emit(TodoState(todos: state.todos));
+    } catch (e) {
+      emit(TodoError(todos: state.todos, message: "Nimadir xato ketdi: $e"));
+    }
+  }
+
+  void toogleTodo(String id) {
+    final index = state.todos.indexWhere((element) => element.id==id,);
+    state.todos[index].isDone = !state.todos[index].isDone;
+    emit(TodoEdited(todos: state.todos));
   }
 }

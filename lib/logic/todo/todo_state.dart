@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:todowithbloc/data/models/todo_model.dart';
 
 @immutable
-abstract class TodoState {
+class TodoState {
   final List<TodoModel> todos;
   const TodoState({required this.todos});
 }
@@ -19,6 +19,11 @@ class TodoLoading extends TodoState {
 class AddTodo extends TodoState {
   const AddTodo({required super.todos});
 }
+
+class TodoEdited extends TodoState {
+  const TodoEdited({required super.todos});
+}
+
 
 class TodoError extends TodoState {
   final String message;

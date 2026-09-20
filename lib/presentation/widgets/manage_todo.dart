@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:todowithbloc/data/models/todo_model.dart';
 import 'package:todowithbloc/logic/todo/todo_cubit.dart';
 
 import '../../logic/todo/todo_state.dart';
 
 class ManageTodo extends StatelessWidget {
-  ManageTodo({super.key});
+  final TodoModel? todo;
+  ManageTodo({super.key, this.todo});
 
   final _formKey = GlobalKey<FormState>();
   String _title = "";
@@ -14,7 +16,7 @@ class ManageTodo extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocListener<TodoCubit, TodoState>(
       listener: (context, state) {
-        if (state is AddTodo) {
+        if (state is AddTodo || state is TodoEdited) {
           Navigator.pop(context);
         }
         else if (state is TodoError) {
@@ -40,6 +42,7 @@ class ManageTodo extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   TextFormField(
+                    initialValue: todo==null?'':todo?.title??'',
                     autofocus: true,
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(),
@@ -63,7 +66,7 @@ class ManageTodo extends StatelessWidget {
                       ),
                       ElevatedButton(
                         onPressed: () => _submit(context),
-                        child: const Text("Add"),
+                        child: Text(todo==null?"Add":'Edit'),
                       ),
                     ],
                   )
@@ -79,7 +82,12 @@ class ManageTodo extends StatelessWidget {
   void _submit(BuildContext context) {
     if (_formKey.currentState!.validate()) { // TO‘G‘RI
       _formKey.currentState!.save();
-      BlocProvider.of<TodoCubit>(context).addTodo(_title);
+      if(todo==null) {
+       context.read<TodoCubit>().addTodo(_title);
+      } else {
+        todo!.title = _title;
+       context.read<TodoCubit>().editTodo(todo! );
+      }
     }
   }
 }

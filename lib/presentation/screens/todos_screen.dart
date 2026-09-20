@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:todowithbloc/logic/todo/todo_cubit.dart';
-import 'package:todowithbloc/logic/todo/todo_cubit.dart';
 
 import '../../logic/todo/todo_state.dart';
 import '../widgets/manage_todo.dart';
